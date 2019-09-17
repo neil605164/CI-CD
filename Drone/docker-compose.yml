@@ -14,6 +14,7 @@ services:
      - "gitlab.local.com:10.0.2.28"
     volumes:
       - ./:/data
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     environment:
       - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
@@ -31,13 +32,14 @@ services:
       - DRONE_LOGS_DEBUG=true
       # - DRONE_LOGS_PRETTY=true
       - DRONE_LOGS_COLOR=true
-    networks:
-      - cicd
 
   drone-agent:
     image: drone/agent:1
     container_name: drone-agent
     restart: always
+    extra_hosts:
+     - "drone.local.com:10.0.2.28"
+     - "gitlab.local.com:10.0.2.28"
     depends_on:
       - drone-server
     volumes:
@@ -46,8 +48,4 @@ services:
       - DRONE_RPC_SERVER=${DRONE_SERVER_HOST}
       - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
       - DRONE_RUNNER_CAPACITY=3
-    networks:
-      - cicd
-networks:
-  cicd:
-    external: true
+      - DRONE_LOGS_DEBUG=true
