@@ -1,0 +1,33 @@
+kind: pipeline
+type: docker
+name: neilclone
+
+steps:
+  - name: resolve
+    image: alpine
+    commands:
+      - cat /etc/resolv.conf
+      - cat /etc/hosts
+    when:
+      status: [ success, failure ]
+  - name: echo
+    image: plugins/git
+    commands:
+    - echo "78523"
+    when:
+      branch:
+      - master
+
+  - name: echo02
+    image: plugins/git
+    commands:
+    - echo "4564456"
+    when:
+      branch:
+      - develop
+
+trigger:
+  branch:
+  - master
+  event:
+  - push
