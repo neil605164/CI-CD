@@ -10,28 +10,26 @@ services:
     ports:
       - 8090:80
     extra_hosts:
-     - "drone.local.com:10.0.2.28"
+     - "drone.local.com:192.168.1.101"
     volumes:
       - ./:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     environment:
-      - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
-      - DRONE_SERVER_PROTO=${DRONE_SERVER_PROTO}
-      - DRONE_TLS_AUTOCERT=false
-      - DRONE_RUNNER_CAPACITY=3
-      - DRONE_GIT_ALWAYS_AUTH=false
-      - DRONE_USER_FILTER=root
-      - DRONE_USER_CREATE=username:root:true
+      - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}                       # Drone URL
+      - DRONE_SERVER_PROTO=${DRONE_SERVER_PROTO}                     # http 或者 https 連線設定
+      - DRONE_TLS_AUTOCERT=false                                     # 自動生成 ssl 證書，並接受 https 連線，末認為false
+      - DRONE_RUNNER_CAPACITY=3                                      # 表示一次可執行 n 個 job
+      - DRONE_GIT_ALWAYS_AUTH=false                                  # Drone clone 時，是否每次都驗證
+      - DRONE_USER_FILTER=root                                       # 可操作 Drone 的用戶清單
+      - DRONE_USER_CREATE=username:root:true                         # 可選擇特定帳號為使用者權限
       # GitLab Config
-      - DRONE_GITLAB=true
-      - DRONE_GITLAB_CLIENT_ID=${DRONE_GITLAB_CLIENT_ID}
-      - DRONE_GITLAB_CLIENT_SECRET=${DRONE_GITLAB_CLIENT_SECRET}
-      - DRONE_GITLAB_SERVER=http://${GITLAB_SERVER}:10080
-      # - DRONE_GITLAB_SERVER=http://gitlab.local.com:10080
-      - DRONE_LOGS_DEBUG=true
-      # - DRONE_LOGS_PRETTY=true
-      - DRONE_LOGS_COLOR=true
+      - DRONE_GITLAB_CLIENT_ID=${DRONE_GITLAB_CLIENT_ID}             # OAuth 的 Application ID
+      - DRONE_GITLAB_CLIENT_SECRET=${DRONE_GITLAB_CLIENT_SECRET}     # OAuth 的 Secret
+      - DRONE_GITLAB_SERVER=http://${GITLAB_SERVER}:10080            # Gitlab Server
+      - DRONE_LOGS_DEBUG=true                                        # 選擇是否開啟 debug 模式
+      # - DRONE_LOGS_PRETTY=true                                     # Log 是否以json方式呈現
+      - DRONE_LOGS_COLOR=true                                        # Log 啟用顏色辨識
 
   drone-agent:
     image: drone/agent:1
