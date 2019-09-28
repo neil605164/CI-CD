@@ -1,0 +1,39 @@
+## 1.0 版本寫法
+kind: pipeline
+type: docker      # 在 Docker 內部執行管道命令
+name: clone       # 可自行定義的名稱
+
+steps:
+  - name: self-plugin                    # 事件一：可自行定義的名稱
+    image: neil605164/drone-plugin-ex    # 使用 neil605164/drone-plugin-ex  容器
+    settings:
+      hello: "Wow"                       # 提供 hello 值為「Wow」，若不提供則為「default」值
+    commands:                            # 驗證是否有接收到帶入的值
+    - echo $PLUGIN_HELLO
+    when:                                # 當觸發條件為 master 分支時會執行的動作
+      branch:
+      - master
+
+trigger:     # 觸發 pipeline 條件，分支為 master，且進行 push 行為
+  branch: 
+  - master
+  event:
+  - push
+
+---
+## 0.8版本寫法
+# clone:
+#   git:
+#     image: plugins/git
+
+# pipeline:
+#   self-plugin:                           # 事件一：可自行定義的名稱
+#     image: neil605164/drone-plugin-ex    # 使用 neil605164/drone-plugin-ex  容器
+#     hello: "Wow"                         # 提供 hello 值為「Wow」，若不提供則為「default」值
+#     commands:                            # 驗證是否有接收到帶入的值
+#     - echo $PLUGIN_HELLO          
+#     when: 
+#       branch: [ master ]                 # 當觸發條件為 master 分支時會執行的動作
+      
+# branches:                                # 觸發 pipeline 條件，分支為 master
+#   include: [ master ]
